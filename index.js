@@ -1,13 +1,12 @@
 // ==UserScript==
-// @name         微店购物车结算脚本
+// @name         微店自动抢购
 // @namespace    http://tampermonkey.net/
-// @version      1
-// @description  微店自动抢
+// @version      2
+// @description  微店自动抢购
 // @author       Abel
 // @match        *://weidian.com/item.html*
-// @icon         https://s1.ax1x.com/2022/10/14/xwsJYT.png
-// @grant        none
 // ==/UserScript==
+
 (function() {
     'use strict';
 

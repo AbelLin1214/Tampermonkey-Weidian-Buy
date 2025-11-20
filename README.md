@@ -1,10 +1,13 @@
 # Tampermonkey-Weidian-Buy
-一个简单的油猴脚本，帮助用户在微店平台购物车页面上自动进行抢购操作。当商品到达结算时间并且按钮可用时，脚本会自动点击结算按钮，提升抢购的成功率。
+
+一个微店自动抢购油猴脚本，帮助用户在微店详情页面上自动进行抢购操作。当商品到达结算时间并且按钮可用时，脚本会自动点击结算按钮，并自动完成后续的立即支付操作，提升抢购的成功率。
+
 ## 功能
 
-- 每隔一定时间检查一次商品是否可以购买。
-- 当商品到达购买时间且结算按钮可点击时，自动触发点击事件。
-- 可自定义检查频率和页面 URL。
+- **悬浮控制面板**：页面右下角提供悬浮窗，包含启动按钮和实时日志输出。
+- **自动点击结算**：当商品到达购买时间且结算按钮可点击时，自动触发点击事件。
+- **智能支付检测**：自动等待订单确认弹窗加载，通过页面校验（checkCreateOrderParam）后点击“立即支付”。
+- **实时状态反馈**：通过日志面板实时显示当前运行状态（如等待开售、等待校验、点击支付等）。
 
 ## 安装步骤
 
@@ -12,61 +15,25 @@
 
 首先，您需要安装油猴（Tampermonkey）或 Greasemonkey 插件：
 
-- [Tampermonkey 插件 (Chrome)](https://tampermonkey.net/)
+- [Tampermonkey 插件 (Chrome/Edge/Safari)](https://tampermonkey.net/)
 - [Greasemonkey 插件 (Firefox)](https://www.greasespot.net/)
 
-### 2. 创建油猴脚本
+### 2. 安装脚本
 
 1. 安装好插件后，点击浏览器插件图标。
-2. 选择 "创建新脚本"。
-3. 在弹出的脚本编辑器中删除默认的代码，将以下代码粘贴进去：
+2. 选择 "添加新脚本" 或 "创建新脚本"。
+3. 打开本仓库中的 [index.js](./index.js) 文件，复制所有代码。
+4. 在弹出的 Tampermonkey 脚本编辑器中删除所有默认代码，并将复制的代码粘贴进去。
+5. 按 `Ctrl+S` 或 `Cmd+S` 保存脚本。
 
-```javascript
-// ==UserScript==
-// @name         微店购物车结算脚本
-// @namespace    
-// @version      1
-// @description  微店自动抢
-// @author       Blackwindow6
-// @match        *://weidian.com/new-cart/*
-// @icon         https://s1.ax1x.com/2022/10/14/xwsJYT.png
-// @grant        none
+## 使用方法
 
-(function() {
-    'use strict';
-
-    // 设置检查间隔时间（例如每0.1秒检查一次）
-    const checkInterval = 100;  // 每100毫秒检查一次
-
-    // 自动结算的函数
-    function autoCheckout() {
-        // 获取结算按钮
-        const checkoutButton = document.querySelector('.go_buy.wd-theme__button1');
-
-        // 如果结算按钮存在且没有被禁用，模拟点击操作
-        if (checkoutButton && !checkoutButton.disabled) {
-            console.log('商品可以购买，自动点击结算按钮');
-            
-            // 使用 MouseEvent 模拟点击操作
-            const clickEvent = new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            });
-
-            checkoutButton.dispatchEvent(clickEvent);
-        } else {
-            console.log('商品尚未到点或不可购买');
-        }
-    }
-
-    // 定时器每隔 checkInterval 毫秒调用一次 autoCheckout 函数
-    setInterval(autoCheckout, checkInterval);
-})();
-
-### 说明：
-1. **项目名称**：`微店自动抢购脚本`。
-2. **安装步骤**：提供了从安装油猴插件到创建和启用脚本的详细步骤。
-3. **配置选项**：提到检查间隔时间和 URL 匹配的配置，方便用户根据需要修改。
-4. **注意事项**：提醒用户遵循合法和合规的使用规则。
-
+1. 打开任意微店商品详情页面（`weidian.com/item.html`）。
+2. 页面右下角会出现一个红色的“微店抢购助手”悬浮面板。
+3. 点击“启动自动抢购”按钮，脚本将进入监控状态，日志显示“自动抢购启动”。
+4. 当到达开售时间时，脚本会自动执行：
+   - 点击“立即购买”
+   - 等待订单确认弹窗加载
+   - 自动通过页面校验
+   - 点击“立即支付”
+5. 支付按钮点击完成后，脚本会自动停止并提示。
