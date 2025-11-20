@@ -107,13 +107,7 @@
 
                 logMessage('点击立即支付按钮...');
 
-                const payClickEvent = new MouseEvent('click', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                });
-
-                payNowButton.dispatchEvent(payClickEvent);
+                payNowButton.click();
                 stopAutoCheckoutTimer();
                 logMessage('立即支付按钮已点击，脚本已停止');
             } else {
@@ -130,14 +124,7 @@
         if (checkoutButton && !checkoutButton.disabled) {
             logMessage('点击结算按钮...');
             
-            // 使用 MouseEvent 模拟点击操作
-            const clickEvent = new MouseEvent('click', {
-                bubbles: true,
-                cancelable: true,
-                view: window
-            });
-
-            checkoutButton.dispatchEvent(clickEvent);
+            checkoutButton.click();
         } else {
             logMessage('等待抢购时间到...');
         }
@@ -153,7 +140,8 @@
 
         if (startButtonRef) {
             startButtonRef.disabled = false;
-            startButtonRef.textContent = '重新启动自动抢购';
+            startButtonRef.textContent = '启动自动抢购';
+            startButtonRef.style.opacity = '1';
         }
     }
 
@@ -222,6 +210,24 @@
             startButton.textContent = '自动抢购中...';
         });
 
+        const stopButton = document.createElement('button');
+        stopButton.textContent = '停止自动抢购';
+        stopButton.style.padding = '8px 16px';
+        stopButton.style.border = '1px solid rgba(255,255,255,0.2)';
+        stopButton.style.borderRadius = '8px';
+        stopButton.style.backgroundColor = 'transparent';
+        stopButton.style.color = '#aaa';
+        stopButton.style.fontSize = '13px';
+        stopButton.style.cursor = 'pointer';
+        stopButton.style.marginTop = '4px';
+
+        stopButton.addEventListener('click', () => {
+            if (autoCheckoutTimerId) {
+                stopAutoCheckoutTimer();
+                logMessage('用户手动停止抢购');
+            }
+        });
+
         const logTitle = document.createElement('div');
         logTitle.textContent = '日志输出';
         logTitle.style.fontSize = '13px';
@@ -239,6 +245,7 @@
 
         panel.appendChild(title);
         panel.appendChild(startButton);
+        panel.appendChild(stopButton);
         panel.appendChild(logTitle);
         panel.appendChild(logContainer);
 
